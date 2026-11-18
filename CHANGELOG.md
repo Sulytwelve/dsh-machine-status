@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.1.1 — 2026-11-18
+
+Documentation only; no runtime or behavior change.
+
+### Fixed
+
+- The install instructions no longer imply that DSH's CLI provides or manages a systemd unit. It
+  does not: the `dsh-web.service` used on the reference host is a locally authored deployment unit.
+  The README, upgrade and rollback steps now say to restart whatever process serves the profile and
+  mark the `systemctl` line as reference-host-only.
+
 ## 0.1.0 — 2026-11-18
 
 First release. A read-only host health snapshot for DSH 0.2.2-rc.3, profile `web`.
@@ -37,7 +48,8 @@ SULY-HPED800, Arch Linux, DSH 0.2.2-rc.3, profile `web`, 2026-11-18:
 
 - `dsh plugin --profile web add …` installed the package and selected the bundle automatically;
   `dsh --profile web --dump-config` shows the `machine-status` row.
-- After a `dsh-web` stop/start, the new process (pid 12683) wrote a heartbeat with
+- After the reference host's own `dsh-web` unit was stopped and started (not something DSH's CLI
+  provides or manages), the new process (pid 12683) wrote a heartbeat with
   `tool.modelFacing: true` and `schemaNames: ["machine_status"]`; the journal showed no plugin error.
 - `doctor` reports no failures; the real sample is `HEALTHY` with dsh-web/forgejo active, backup
   success 4 h 29 m old and `2408:825c:260:b0c::/64` on `eno1`.
@@ -58,4 +70,5 @@ SULY-HPED800, Arch Linux, DSH 0.2.2-rc.3, profile `web`, 2026-11-18:
 ### Rollback
 
 `dsh-machine-status uninstall [--purge]`, then
-`dsh plugin --profile web remove @sulytwelve/dsh-machine-status`, then restart `dsh-web`.
+`dsh plugin --profile web remove @sulytwelve/dsh-machine-status`, then restart the DSH host process
+you run (DSH does not provide or manage a systemd unit).

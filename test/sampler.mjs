@@ -23,7 +23,7 @@ test('one cycle writes snapshot, state and status with real evidence ids', () =>
   const result = runSample({ stateDir, config: config(), deps: deps(), nowMs: NOW })
   assert.equal(result.snapshot.schema, 'dsh.machine-status/snapshot@1')
   assert.equal(result.snapshot.host.bootId, 'boot-1')
-  assert.equal(result.snapshot.sampler.version, '0.1.0')
+  assert.equal(result.snapshot.sampler.version, '0.1.1')
   for (const name of ['disk', 'memory', 'services', 'backup', 'ipv6']) {
     assert.equal(result.snapshot.collectors[name].status, 'ok', `${name} collector should be ok`)
     assert.ok(Number.isFinite(result.snapshot.collectors[name].durationMs))

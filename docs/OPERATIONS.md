@@ -66,7 +66,7 @@ running process loaded the row and its registry projects the tool.
 | service fails `ENOENT` | runtime copy missing; rerun `install` |
 | timer inactive after logout | linger disabled for the DSH user |
 | heartbeat says `model-facing: no` | the tool registry did not project the tool; check for a duplicate name or a failed row |
-| `doctor` reports runtime version mismatch | package updated without `install`; rerun `install` and restart `dsh-web` |
+| `doctor` reports runtime version mismatch | package updated without `install`; rerun `install` and restart the DSH host process |
 
 A dead sampler cannot report itself; the snapshot's age is the authoritative signal, and `doctor`
 adds the timer's own state.
@@ -74,9 +74,10 @@ adds the timer's own state.
 ## Upgrade
 
 ```sh
-dsh plugin --profile web add github:Sulytwelve/dsh-machine-status#v0.x.y
+dsh plugin --profile web add github:Sulytwelve/dsh-machine-status#v0.1.1
 dsh-machine-status install          # refresh the runtime copy and units
-sudo systemctl restart dsh-web
+# restart the DSH host process you run; DSH's CLI does not manage a systemd unit.
+# The reference host uses its own local dsh-web.service for this step.
 ```
 
 The installed runtime copy is version-stamped; `doctor` compares it with the package version.
@@ -87,7 +88,8 @@ The installed runtime copy is version-stamped; `doctor` compares it with the pac
 dsh-machine-status uninstall            # stop timer, remove units, keep state
 dsh-machine-status uninstall --purge    # also remove the state directory
 dsh plugin --profile web remove @sulytwelve/dsh-machine-status
-sudo systemctl restart dsh-web
+# then restart the DSH host process you run (DSH does not provide a systemd unit;
+# the reference host restarts its own local dsh-web.service)
 ```
 
 The plugin-install backup of the profile manifest is

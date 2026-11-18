@@ -42,15 +42,22 @@ running Host registry projects `machine_status` into the model-facing schemas.
 ### 1. Plugin row (on the DSH host, as the DSH user)
 
 ```sh
-dsh plugin --profile web add github:Sulytwelve/dsh-machine-status#v0.1.0
+dsh plugin --profile web add github:Sulytwelve/dsh-machine-status#v0.1.1
 ```
 
-This also appends the bundle to `dsh.profile.bundles` (verified; no hand edit needed).
-Restart `dsh-web` once so the running process loads the package:
+This also appends the bundle to `dsh.profile.bundles` (verified on the reference host; no hand edit
+needed).
+
+Restart the DSH process that serves the profile so it loads the new JavaScript. **DSH's CLI does not
+install, provide, or manage a systemd unit** — how that process is supervised is deployment-specific.
+The reference host runs `dsh web` under a locally authored `dsh-web.service`; a terminal launch, a
+container, or another supervisor works the same way. Use whatever starts your server:
 
 ```sh
+# reference host only: this is our own unit, not something DSH provides
 sudo systemctl restart dsh-web
 ```
+
 
 ### 2. Sampler timer (same user, no root)
 
@@ -170,7 +177,7 @@ npm pack          # tarball includes test/
 The clean-install check used on the target host:
 
 ```sh
-mkdir /tmp/dsh-ms && tar -xzf sulytwelve-dsh-machine-status-0.1.0.tgz -C /tmp/dsh-ms
+mkdir /tmp/dsh-ms && tar -xzf sulytwelve-dsh-machine-status-0.1.1.tgz -C /tmp/dsh-ms
 cd /tmp/dsh-ms/package && node test/*.mjs
 ```
 
@@ -202,7 +209,8 @@ dsh-machine-status uninstall --purge    # also removes the state directory
 
 # plugin row
 dsh plugin --profile web remove @sulytwelve/dsh-machine-status
-sudo systemctl restart dsh-web
+# then restart the DSH host process you run (see Install §1); the reference host
+# restarts its own local dsh-web.service, which DSH does not provide
 ```
 
 The profile `package.json` backup taken before installation is
