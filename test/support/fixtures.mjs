@@ -28,7 +28,7 @@ export function healthySnapshot({ nowMs = NOW, bootId = 'boot-1', completedAtMs 
   return {
     schema: 'dsh.machine-status/snapshot@1',
     sampleId,
-    sampler: { version: '0.1.1', node: 'v26.0.0', platform: 'linux', arch: 'x64' },
+    sampler: { version: '0.1.2', node: 'v26.0.0', platform: 'linux', arch: 'x64' },
     host: { hostname: 'SULY-HPED800', bootId, machineId: 'machine-1', platform: 'linux', arch: 'x64' },
     startedAtMs: sampledAtMs - 120,
     startedAt: isoLocal(sampledAtMs - 120),

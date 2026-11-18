@@ -74,10 +74,9 @@ adds the timer's own state.
 ## Upgrade
 
 ```sh
-dsh plugin --profile web add github:Sulytwelve/dsh-machine-status#v0.1.1
+dsh plugin --profile web add github:Sulytwelve/dsh-machine-status#v0.1.2
 dsh-machine-status install          # refresh the runtime copy and units
-# restart the DSH host process you run; DSH's CLI does not manage a systemd unit.
-# The reference host uses its own local dsh-web.service for this step.
+# restart the DSH host process you run; DSH's CLI provides no unit or service manager.
 ```
 
 The installed runtime copy is version-stamped; `doctor` compares it with the package version.
@@ -88,8 +87,7 @@ The installed runtime copy is version-stamped; `doctor` compares it with the pac
 dsh-machine-status uninstall            # stop timer, remove units, keep state
 dsh-machine-status uninstall --purge    # also remove the state directory
 dsh plugin --profile web remove @sulytwelve/dsh-machine-status
-# then restart the DSH host process you run (DSH does not provide a systemd unit;
-# the reference host restarts its own local dsh-web.service)
+# then restart the DSH host process you run (DSH provides no unit or service manager)
 ```
 
 The plugin-install backup of the profile manifest is

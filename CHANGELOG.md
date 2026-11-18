@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.2 — 2026-11-18
+
+Documentation only; no runtime or behavior change.
+
+### Fixed
+
+- Removed the `systemctl restart dsh-web` command from the install and rollback steps entirely.
+  DSH's CLI does not provide or manage a systemd unit, and the reference host's unit is our own
+  local deployment; the docs now only say to restart whatever process serves the profile.
+
 ## 0.1.1 — 2026-11-18
 
 Documentation only; no runtime or behavior change.

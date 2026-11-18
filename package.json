@@ -1,6 +1,6 @@
 {
   "name": "@sulytwelve/dsh-machine-status",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Read-only host health snapshots for DeepSeek Harness: disk, memory and load, systemd services, backup freshness and IPv6. An independent systemd user timer samples; the model-facing tool only reads.",
   "keywords": [
     "dsh",
