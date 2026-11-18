@@ -223,7 +223,9 @@ Three install paths, in preference order:
 2. **GitHub tag** — `dsh plugin --profile web add github:Sulytwelve/dsh-machine-status#vX.Y.Z` (pin the tag).
 3. **Release tarball URL** — `dsh plugin --profile web add https://github.com/Sulytwelve/dsh-machine-status/releases/download/vX.Y.Z/sulytwelve-dsh-machine-status.tgz`.
 
-**Upgrading:** DSH currently has no in-place update operation. Remove the bundle, add the new pinned
+**Upgrading:** DSH hot-updates code inside an installed plugin (HMR), but it does not overwrite an
+installed plugin package. A new version therefore needs remove then add (restart only if the Host
+does not hot-load the new module generation):
 tag, then restart the process that serves the profile:
 
 ```sh
