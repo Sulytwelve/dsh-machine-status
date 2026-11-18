@@ -1,0 +1,7 @@
+{
+  "meta": {
+    "title": "机器健康快照",
+    "description": "只读的主机健康快照：磁盘、内存与负载、systemd 服务、备份新鲜度与 IPv6。由独立的 systemd 用户定时器采样；工具本身不采样、不执行、不请求审批。",
+    "detail": "docs/DETAIL.md"
+  }
+}

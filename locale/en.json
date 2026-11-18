@@ -1,0 +1,7 @@
+{
+  "meta": {
+    "title": "Machine status",
+    "description": "Read-only host health snapshots: disk, memory and load, systemd services, backup freshness and IPv6. An independent systemd user timer samples; the tool never samples, never executes, and never asks for approval.",
+    "detail": "docs/DETAIL.md"
+  }
+}

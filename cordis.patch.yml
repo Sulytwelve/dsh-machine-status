@@ -1,0 +1,15 @@
+# Machine status — read-only host health for DeepSeek Harness.
+#
+# This row only reads the snapshot files written by the independent sampler
+# (systemd user timer). It never samples, never executes remediation, and asks
+# for no approval.
+#
+# Default numbers are calibrate-required; see README.md for the provenance
+# table. Sampling itself is configured in the sampler config file (written by
+# `dsh-machine-status install`), not here.
+- insert:
+    - id: machine-status
+      name: '@sulytwelve/dsh-machine-status'
+      config:
+        enabled: true
+        ttlMs: 180000
