@@ -42,7 +42,7 @@ running Host registry projects `machine_status` into the model-facing schemas.
 ### 1. Plugin row (on the DSH host, as the DSH user)
 
 ```sh
-dsh plugin --profile web add github:Sulytwelve/dsh-machine-status#v0.1.3
+dsh plugin --profile web add github:Sulytwelve/dsh-machine-status#v0.1.4
 ```
 
 This also appends the bundle to `dsh.profile.bundles` (verified on the reference host; no hand edit
@@ -174,7 +174,7 @@ npm pack          # tarball includes test/
 The clean-install check used on the target host:
 
 ```sh
-mkdir /tmp/dsh-ms && tar -xzf sulytwelve-dsh-machine-status-0.1.3.tgz -C /tmp/dsh-ms
+mkdir /tmp/dsh-ms && tar -xzf sulytwelve-dsh-machine-status-0.1.4.tgz -C /tmp/dsh-ms
 cd /tmp/dsh-ms/package && node test/*.mjs
 ```
 
@@ -230,7 +230,7 @@ tag, then restart the process that serves the profile:
 
 ```sh
 dsh plugin --profile web remove @sulytwelve/dsh-machine-status
-dsh plugin --profile web add github:Sulytwelve/dsh-machine-status#v0.1.3
+dsh plugin --profile web add github:Sulytwelve/dsh-machine-status#v0.1.4
 ```
 
 Until npm publishing is enabled, use the GitHub tag or the release tarball spec after the remove.

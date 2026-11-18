@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.4 — 2026-11-18
+
+### Fixed
+
+- A plugin-hosted service whose config omits `telemetry` is now normalized to `telemetry: none`
+  instead of `auto`. Upgraded installations keep their existing `config.json` (install preserves it),
+  so without this fix `memory-probe` flipped from an expected unknown to an unexpected one and
+  degraded a healthy sample.
+
 ## 0.1.3 — 2026-11-18
 
 ### Changed
