@@ -4,14 +4,16 @@ import { emptyState } from '../lib/state.mjs'
 import { evaluate } from '../lib/evaluate.mjs'
 import { config, evaluateSteps, healthySnapshot, withSnapshot, NOW } from './support/fixtures.mjs'
 
-test('a fully readable sample is healthy; the plugin-hosted unknown stays informational', () => {
+test('a fully readable sample is healthy; a declared-absent telemetry source is an expected unknown', () => {
   const result = evaluate({ snapshot: healthySnapshot(), state: emptyState(), config: config(), nowMs: NOW })
   assert.equal(result.status.overall, 'healthy')
   assert.equal(result.status.incidents.length, 0)
-  assert.equal(result.status.findings.length, 1)
-  assert.equal(result.status.findings[0].ruleId, 'svc.unhealthy')
-  assert.equal(result.status.findings[0].severity, 'info')
-  assert.equal(result.status.findings[0].subject, 'memory-probe')
+  assert.equal(result.status.findings.length, 0)
+  assert.equal(result.status.unknowns.length, 1)
+  assert.equal(result.status.unknowns[0].ruleId, 'svc.unhealthy')
+  assert.equal(result.status.unknowns[0].subject, 'memory-probe')
+  assert.equal(result.status.unknowns[0].expected, true)
+  assert.match(result.status.unknowns[0].hint, /plugin-hosted service/)
 })
 
 test('an inactive systemd unit breaches svc.unhealthy at critical severity', () => {
@@ -90,15 +92,19 @@ test('a missing global address alerts only when the policy requires it', () => {
   assert.equal(strictFinding.outcome, 'breach')
 })
 
-test('a failed collector reports unknown at warning severity, never critical', () => {
+test('a failed collector separates actionable findings from unexpected unknowns', () => {
   const snapshot = withSnapshot(healthySnapshot(), next => {
     next.collectors.services = { status: 'failed', sampledAtMs: NOW, durationMs: 3, error: 'systemctl is unavailable' }
   })
   const result = evaluate({ snapshot, state: emptyState(), config: config(), nowMs: NOW })
   const failed = result.status.findings.find(item => item.ruleId === 'collector.failed')
   assert.equal(failed.severity, 'warning')
-  const serviceFindings = result.status.findings.filter(item => item.ruleId === 'svc.unhealthy')
-  assert.ok(serviceFindings.length >= 1)
-  assert.ok(serviceFindings.every(item => item.severity === 'warning'))
+  const serviceUnknowns = result.status.unknowns.filter(item => item.ruleId === 'svc.unhealthy')
+  assert.ok(serviceUnknowns.length >= 1)
+  const systemdUnknown = serviceUnknowns.find(item => item.subject === 'dsh-web')
+  assert.equal(systemdUnknown.severity, 'warning')
+  assert.equal(systemdUnknown.expected, false)
+  const declaredUnknown = serviceUnknowns.find(item => item.subject === 'memory-probe')
+  assert.equal(declaredUnknown.expected, true)
   assert.equal(result.status.overall, 'degraded')
 })

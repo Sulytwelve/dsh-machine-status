@@ -42,7 +42,7 @@ running Host registry projects `machine_status` into the model-facing schemas.
 ### 1. Plugin row (on the DSH host, as the DSH user)
 
 ```sh
-dsh plugin --profile web add github:Sulytwelve/dsh-machine-status#v0.1.2
+dsh plugin --profile web add github:Sulytwelve/dsh-machine-status#v0.1.3
 ```
 
 This also appends the bundle to `dsh.profile.bundles` (verified on the reference host; no hand edit
@@ -92,8 +92,8 @@ memory   2.5 GiB available / 3.7 GiB · load 0.1 0.04 0.01 · 4 cpus
 services dsh-web active/running · forgejo active/running · memory-probe unknown (plugin-hosted service has no systemd unit; no telemetry source is configured)
 backup forgejo-backup.service success/0 · last completion 4h29m ago (limit 26h) · artifact unknown (journal evidence is opt-in (backup.journal); unit completion is the default evidence)
 ipv6     eno1 2408:825c:260:b0c::/64
-findings 1 · incidents 0
-  [info] svc.unhealthy memory-probe: … evidence=svc:memory-probe
+findings 0 · unknowns 1 · incidents 0
+  [unknown expected] svc.unhealthy memory-probe: plugin-hosted service has no systemd unit; no telemetry source is configured · hint: telemetry: none evidence=svc:memory-probe
 evidence host disk:/ disk:/srv/storage mem load svc:dsh-web svc:forgejo svc:memory-probe backup:forgejo-backup.service ipv6:eno1
 ```
 
@@ -101,7 +101,7 @@ Stale data is never presented as current:
 
 ```
 machine_status: STALE · SULY-HPED800 · last sample … · 7m28s old (ttl 180s)
-last known: HEALTHY · findings 0 · open incidents 0
+last known: HEALTHY · findings 0 · unknowns 1 · open incidents 0
 diagnostic: reading never samples; this is not current machine state. Run `dsh-machine-status doctor`.
 ```
 
@@ -127,9 +127,11 @@ More samples: [docs/SAMPLES.md](docs/SAMPLES.md).
 
 - A rule breaches or is healthy per sample; **two consecutive breaches** open one incident,
   **two consecutive healthy samples** close it.
-- `unknown` (failed collector, unreadable mount, unreadable unit) is tracked separately: it never
-  closes an incident and never counts as healthy. An open incident plus missing telemetry adds a
-  `telemetry.gap` warning.
+- `unknown` (failed collector, unreadable mount, unreadable unit) is tracked separately in
+  `unknowns`, not in `findings`: it never closes an incident and never counts as healthy. An
+  **expected** unknown is a source the operator declared absent (`telemetry: none`, e.g. the
+  plugin-hosted memory probe): it is listed once with its hint, does not degrade the sample and is
+  not repeated as a finding. Any unexpected unknown still degrades the sample.
 - Boot-id change (host reboot) restarts per-rule streaks and records `host.reboot` information.
 - A changed IPv6 /64 prefix is **information only**; a missing global address alerts only when
   `collect.ipv6.requireGlobal` is true.
@@ -159,6 +161,7 @@ Measured on **SULY-HPED800** (Arch Linux, 4 GB RAM, Node v26.13.1, DSH 0.2.2-rc.
 | incident open/close | 2 / 2 samples | calibrate-required | brief starting policy |
 | notification retention | 512 rows | calibrate-required | not measured |
 | collector timeout | 2,000 ms | calibrate-required | max observed 12 ms, 2 s is headroom |
+| unknown telemetry | separate `unknowns`; `telemetry: none` is expected and does not degrade | product choice | memory-probe declared absent with a hint |
 | notifications | off | product requirement | silent by default |
 
 ## Tests
@@ -171,7 +174,7 @@ npm pack          # tarball includes test/
 The clean-install check used on the target host:
 
 ```sh
-mkdir /tmp/dsh-ms && tar -xzf sulytwelve-dsh-machine-status-0.1.2.tgz -C /tmp/dsh-ms
+mkdir /tmp/dsh-ms && tar -xzf sulytwelve-dsh-machine-status-0.1.3.tgz -C /tmp/dsh-ms
 cd /tmp/dsh-ms/package && node test/*.mjs
 ```
 
@@ -184,7 +187,9 @@ failed writes keeping the previous snapshot, and the unit/config installer.
 
 - Collectors target Linux. On other platforms disk/memory degrade to OS fallbacks and
   services/backup/IPv6 report `unknown` with a diagnostic; nothing throws.
-- `memory-probe` has no systemd unit (it is a plugin row). It is reported **unknown**, never guessed.
+- `memory-probe` has no systemd unit (it is a plugin row). It is declared `telemetry: none`, so it is
+  listed once as an **expected** unknown with its hint; it does not degrade the sample and does not
+  repeat as a finding. It is never guessed as healthy.
   This plugin does not read the context-manager's data.
 - Backup evidence is the job's systemd completion record (`Result=success`, `ExecMainStatus=0`,
   completion time). The artifact name/count lives in a journal line the `dsh` user cannot read by
@@ -209,6 +214,17 @@ dsh plugin --profile web remove @sulytwelve/dsh-machine-status
 The profile `package.json` backup taken before installation is
 `~/.dsh/profiles/web/package.json.bak-20261118-ms`. See [docs/OPERATIONS.md](docs/OPERATIONS.md).
 
+## Distribution
+
+Three install paths, in preference order:
+
+1. **npm** — the repository carries a tag-triggered publish workflow; once the `NPM_TOKEN` secret is
+   configured, a tagged release publishes to the registry and installs as a normal package.
+2. **GitHub tag** — `dsh plugin --profile web add github:Sulytwelve/dsh-machine-status#vX.Y.Z` (pin the tag).
+3. **Release tarball URL** — `dsh plugin --profile web add https://github.com/Sulytwelve/dsh-machine-status/releases/download/vX.Y.Z/sulytwelve-dsh-machine-status.tgz`.
+
+Until npm publishing is enabled, upgrade with a new pinned tag; the installed Host process still
+needs the usual restart to load new JavaScript.
 ## License
 
 MIT — see [LICENSE](LICENSE).

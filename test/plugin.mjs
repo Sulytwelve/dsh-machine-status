@@ -53,7 +53,7 @@ test('the heartbeat records that the registry projects the tool into the model-f
   apply(fakeCtx(), { stateDir })
   const heartbeat = readJson(statePaths(stateDir).loaded).value
   assert.equal(heartbeat.schema, 'dsh.machine-status/plugin-loaded@1')
-  assert.equal(heartbeat.version, '0.1.2')
+  assert.equal(heartbeat.version, '0.1.3')
   assert.equal(heartbeat.tool.registered, true)
   assert.equal(heartbeat.tool.modelFacing, true)
   assert.ok(heartbeat.tool.schemaNames.includes('machine_status'))

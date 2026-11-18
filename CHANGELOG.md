@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.1.3 — 2026-11-18
+
+### Changed
+
+- `unknown` telemetry is no longer mixed into `findings`. The status now carries a separate
+  `unknowns` list, and the summary prints `findings N · unknowns M · incidents K`.
+- A service can declare its telemetry absent (`kind: plugin`, `telemetry: none`, `hint: ...`). Such a
+  source is an **expected** unknown: listed once with its hint, does not degrade the sample, and is
+  not repeated as a finding. The plugin-hosted `memory-probe` uses this by default. Unexpected
+  unknowns (failed collectors, missing systemd units) still degrade the sample.
+- Distribution: added a tag-triggered npm publish workflow (`.github/workflows/publish.yml`) using
+  `NPM_TOKEN`; the package was already `files`/`publishConfig`/`bin` ready.
+
 ## 0.1.2 — 2026-11-18
 
 Documentation only; no runtime or behavior change.

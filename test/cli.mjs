@@ -135,5 +135,5 @@ test('notifications on an empty store is an empty answer, not an error', () => {
 test('version prints the package version', () => {
   const result = run(['version'], temp())
   assert.equal(result.status, 0)
-  assert.match(result.stdout, /dsh-machine-status 0\.1\.2/)
+  assert.match(result.stdout, /dsh-machine-status 0\.1\.3/)
 })

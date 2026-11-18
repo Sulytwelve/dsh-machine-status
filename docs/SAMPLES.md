@@ -12,8 +12,8 @@ memory   2.5 GiB available / 3.7 GiB · load 0.1 0.04 0.01 · 4 cpus
 services dsh-web active/running · forgejo active/running · memory-probe unknown (plugin-hosted service has no systemd unit; no telemetry source is configured)
 backup forgejo-backup.service success/0 · last completion 4h29m ago (limit 26h) · artifact unknown (journal evidence is opt-in (backup.journal); unit completion is the default evidence)
 ipv6     eno1 2408:825c:260:b0c::/64
-findings 1 · incidents 0
-  [info] svc.unhealthy memory-probe: plugin-hosted service has no systemd unit; no telemetry source is configured observed=unknown expected=a service observation evidence=svc:memory-probe
+findings 0 · unknowns 1 · incidents 0
+  [unknown expected] svc.unhealthy memory-probe: plugin-hosted service has no systemd unit; no telemetry source is configured · hint: telemetry: none evidence=svc:memory-probe
 evidence host disk:/ disk:/srv/storage mem load svc:dsh-web svc:forgejo svc:memory-probe backup:forgejo-backup.service ipv6:eno1
 ```
 
@@ -42,11 +42,11 @@ memory   2.6 GiB available / 4.0 GiB · load 0.06 0.04 0.01 · 8 cpus
 services dsh-web active/running · forgejo active/running · memory-probe unknown (plugin-hosted service has no systemd unit; no telemetry source is configured)
 backup unknown (ETIMEDOUT systemctl show timed out)
 ipv6     eno1 2408:825c:260:b0c::/64
-findings 4 · incidents 0
+findings 3 · unknowns 1 · incidents 0
   [warning] backup.failed backup: backup collector unavailable observed=unknown expected=a fresh observation evidence=backup:forgejo-backup.service
   [warning] backup.stale backup: backup collector unavailable observed=unknown expected=a fresh observation evidence=backup:forgejo-backup.service
   [warning] collector.failed backup: backup collector failed: ETIMEDOUT systemctl show timed out observed=collector failed expected=ok evidence=collector:backup
-  [info] svc.unhealthy memory-probe: plugin-hosted service has no systemd unit; no telemetry source is configured observed=unknown expected=a service observation evidence=svc:memory-probe
+  [unknown expected] svc.unhealthy memory-probe: plugin-hosted service has no systemd unit; no telemetry source is configured · hint: telemetry: none evidence=svc:memory-probe
 diagnostic: backup unknown (ETIMEDOUT systemctl show timed out)
 evidence host disk:/ disk:/srv/storage mem load svc:dsh-web svc:forgejo svc:memory-probe backup:forgejo-backup.service ipv6:eno1
 ```
@@ -60,9 +60,9 @@ memory   2.6 GiB available / 4.0 GiB · load 0.06 0.04 0.01 · 8 cpus
 services dsh-web failed/running result=exit-code · forgejo active/running · memory-probe unknown (plugin-hosted service has no systemd unit; no telemetry source is configured)
 backup forgejo-backup.service success/0 · last completion 4h ago (limit 26h) · artifact unknown (journal evidence is opt-in (backup.journal); unit completion is the default evidence)
 ipv6     eno1 2408:825c:260:b0c::/64
-findings 2 · incidents 1
+findings 1 · unknowns 1 · incidents 1
   [critical] svc.unhealthy dsh-web: dsh-web is not healthy (failed) observed=failed/running result=exit-code expected=active/running result=success evidence=svc:dsh-web
-  [info] svc.unhealthy memory-probe: plugin-hosted service has no systemd unit; no telemetry source is configured observed=unknown expected=a service observation evidence=svc:memory-probe
+  [unknown expected] svc.unhealthy memory-probe: plugin-hosted service has no systemd unit; no telemetry source is configured · hint: telemetry: none evidence=svc:memory-probe
 incident [open] svc.unhealthy dsh-web since 09:07:00 evidence=svc:dsh-web
 evidence host disk:/ disk:/srv/storage mem load svc:dsh-web svc:forgejo svc:memory-probe backup:forgejo-backup.service ipv6:eno1
 ```

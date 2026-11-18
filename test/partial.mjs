@@ -17,9 +17,10 @@ test('a failed collector yields unknown findings, a degraded sample and no inven
   assert.notEqual(evaluated.status.overall, 'healthy')
   const failed = evaluated.status.findings.find(item => item.ruleId === 'collector.failed' && item.subject === 'memory')
   assert.equal(failed.severity, 'warning')
-  const unknown = evaluated.status.findings.find(item => item.ruleId === 'mem.available.low')
+  const unknown = evaluated.status.unknowns.find(item => item.ruleId === 'mem.available.low')
   assert.equal(unknown.outcome, 'unknown')
   assert.equal(unknown.severity, 'warning')
+  assert.equal(unknown.expected, false)
   assert.ok(evaluated.status.counters.unknown > 0)
 })
 

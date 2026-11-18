@@ -29,8 +29,9 @@ by the operator. Every numeric default is either measured (documented in the REA
 ## Boundaries
 
 - Linux collectors only; other platforms report `unknown` for Linux-specific sources.
-- `memory-probe` is plugin-hosted and has no systemd unit, so it is reported unknown unless a
-  telemetry source is configured later.
+- `memory-probe` is plugin-hosted and has no systemd unit. It is declared `telemetry: none` with a
+  hint, so it appears once as an expected unknown rather than repeating as a finding; it is never
+  reported as healthy.
 - Backup artifact names are journal evidence and opt-in; the default evidence is the unit's
   successful completion time and exit status.
 - No remediation, no GUI, no approval interception, no execution authority.
