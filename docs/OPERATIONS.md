@@ -74,7 +74,9 @@ adds the timer's own state.
 ## Upgrade
 
 ```sh
-dsh plugin --profile web add github:Sulytwelve/dsh-machine-status#v0.1.2
+# DSH has no in-place update: remove, add the new tag, then restart.
+dsh plugin --profile web remove @sulytwelve/dsh-machine-status
+dsh plugin --profile web add github:Sulytwelve/dsh-machine-status#v0.1.3
 dsh-machine-status install          # refresh the runtime copy and units
 # restart the DSH host process you run; DSH's CLI provides no unit or service manager.
 ```

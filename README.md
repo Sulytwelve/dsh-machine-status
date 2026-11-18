@@ -223,8 +223,15 @@ Three install paths, in preference order:
 2. **GitHub tag** — `dsh plugin --profile web add github:Sulytwelve/dsh-machine-status#vX.Y.Z` (pin the tag).
 3. **Release tarball URL** — `dsh plugin --profile web add https://github.com/Sulytwelve/dsh-machine-status/releases/download/vX.Y.Z/sulytwelve-dsh-machine-status.tgz`.
 
-Until npm publishing is enabled, upgrade with a new pinned tag; the installed Host process still
-needs the usual restart to load new JavaScript.
+**Upgrading:** DSH currently has no in-place update operation. Remove the bundle, add the new pinned
+tag, then restart the process that serves the profile:
+
+```sh
+dsh plugin --profile web remove @sulytwelve/dsh-machine-status
+dsh plugin --profile web add github:Sulytwelve/dsh-machine-status#v0.1.3
+```
+
+Until npm publishing is enabled, use the GitHub tag or the release tarball spec after the remove.
 ## License
 
 MIT — see [LICENSE](LICENSE).
